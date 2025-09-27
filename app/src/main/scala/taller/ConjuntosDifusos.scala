@@ -6,19 +6,28 @@ class ConjuntosDifusos {
 
   def pertenece(elem: Int, s: ConjDifuso): Double = s(elem)
 
-  //-----Conjunto de numeros "Grandes"-----
+  // ----- Conjunto Difuso "Grande" -----
   def grande(d: Int, e: Int): ConjDifuso = {
     require(d >= 1, "d debe ser mayor o igual a 1")
     require(e >= 1, "e debe ser mayor o igual a 1")
 
-    //Retorna una funcion caracteristica del conjunto difuso
     (x: Int) => {
-      if (x <= 0) 0.0 //Si x <= 0, no se considera grande
+      if (x <= 0) 0.0 //Si x no es positivo entonces es grado 0
       else {
         val base = x.toDouble / (x + d).toDouble // base = x/(x+d)
-        math.pow(base, e.toDouble) // Eleva base^e y ajusta que tan "grande" es x
+        val res = math.pow(base, e.toDouble)
+        math.max(0.0, math.min(1.0, res)) //garantizar rango [0,1]
       }
     }
   }
 
+  // ----- Conjunto Difuso "Complemento" -----
+  def complemento(c: ConjDifuso): ConjDifuso = {
+    (x: Int) => {
+      val v = c(x)              // aplicamos la función al valor x
+      val res = 1.0 - v         // definición de complemento
+      math.max(0.0, math.min(1.0, res)) // Rango
+    }
+  }
 }
+

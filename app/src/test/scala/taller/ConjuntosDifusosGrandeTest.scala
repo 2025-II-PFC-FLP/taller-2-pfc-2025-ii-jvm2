@@ -5,10 +5,10 @@ import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ConjuntosDifusosTest extends AnyFunSuite {
+class ConjuntosDifusosGrandeTest extends AnyFunSuite {
   val cd = new ConjuntosDifusos
 
-  // ----------Pruebas para el conjunto difuso "grande"----------
+  // ----------Pruebas para el conjunto difuso "Grande"----------
   test("Mayor d implica menor grado de pertenencia para un mismo x") {
     val g1 = cd.grande(1, 2)
     val g5 = cd.grande(5, 2)
