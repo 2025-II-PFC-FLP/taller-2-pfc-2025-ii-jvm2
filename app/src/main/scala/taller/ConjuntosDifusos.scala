@@ -1,5 +1,7 @@
 package taller
 
+import scala.annotation.tailrec
+
 class ConjuntosDifusos {
 
   type ConjDifuso = Int => Double
@@ -28,6 +30,22 @@ class ConjuntosDifusos {
       val res = 1.0 - v         // definición de complemento
       math.max(0.0, math.min(1.0, res)) // Rango
     }
+  }
+
+  // ----- Conjunto Difuso "Inclusión" -----
+  def inclusion(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
+    @tailrec
+    def aux(i: Int): Boolean = {
+      if (i > 1000) true
+      else if (cd1(i) <= cd2(i)) aux(i + 1) // llamada de cola
+      else false
+    }
+    aux(0)
+  }
+
+  // ----- Conjunto Difuso "Igualdad" -----
+  def igualdad(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
+    inclusion(cd1, cd2) && inclusion(cd2, cd1)
   }
 }
 
