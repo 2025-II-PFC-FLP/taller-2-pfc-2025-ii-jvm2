@@ -47,5 +47,27 @@ class ConjuntosDifusos {
   def igualdad(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
     inclusion(cd1, cd2) && inclusion(cd2, cd1)
   }
+
+  //--------Union---------
+
+  def union(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso={
+    (x: Int) => Math.max(cd1(x), cd2(x))
+  }
+
+
+  //-------Interseccion----------
+
+  def interseccion(cd1: ConjDifuso,cd2: ConjDifuso): ConjDifuso={
+    (x: Int) => Math.min(cd1(x), cd2(x))
+  }
+
+  //-------Mostrar el conjunto rango [0,1]------
+  //es para recorrer dicho rango y mostrar el grado de pertenecia
+
+  def mostrarConjunto(cd: ConjDifuso, inicio: Int, fin: Int): Unit={
+    (inicio to fin).foreach {x => println(s"x= $x ->  μ(x) = ${cd(x)}")}
+  }
+
 }
+
 
