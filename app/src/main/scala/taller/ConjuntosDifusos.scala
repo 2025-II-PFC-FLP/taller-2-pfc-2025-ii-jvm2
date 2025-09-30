@@ -61,13 +61,6 @@ class ConjuntosDifusos {
     (x: Int) => Math.min(cd1(x), cd2(x))
   }
 
-  //-------Mostrar el conjunto rango [0,1]------
-  //es para recorrer dicho rango y mostrar el grado de pertenecia
-
-  def mostrarConjunto(cd: ConjDifuso, inicio: Int, fin: Int): Unit={
-    (inicio to fin).foreach {x => println(s"x= $x ->  μ(x) = ${cd(x)}")}
-  }
-
 }
 
 
