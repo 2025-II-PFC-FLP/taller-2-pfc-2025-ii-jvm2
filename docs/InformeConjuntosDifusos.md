@@ -29,9 +29,9 @@ En el código:
 
 ### 2.2 Ejemplo
 Para `d=1, e=2` y `x=2`:  
-$$
-f(2) = \left(\frac{2}{2+1}\right)^2 = \left(\frac{2}{3}\right)^2 = 0.444...
-$$
+
+$$f(2) = \left(\frac{2}{2+1}\right)^2 = \left(\frac{2}{3}\right)^2 = 0.444...$$
+
 
 ### 2.3 Pila de llamados
 ```mermaid
@@ -103,10 +103,11 @@ sequenceDiagram
     inclusion->>aux: aux(0)
     aux->>aux: aux(1)
     aux->>aux: aux(2)
-    ...
     aux-->>inclusion: true/false
     inclusion-->>Main: resultado
 ```
+*(El proceso continúa de la misma forma hasta i = 1000…)*
+
 ## 5. Función `igualdad`
 
 ### 5.1 Explicación
@@ -122,9 +123,7 @@ En el código:
 
 ### 5.2 Ejemplo
 Si `cd1(x) = cd2(x)` para todo `x`, entonces:
-$$
-igualdad(cd1, cd2) = true
-$$
+$$igualdad(cd1, cd2) = true$$
 
 Si existe algún `x` donde difieran, la igualdad es `false`.
 
@@ -156,9 +155,7 @@ En el código:
 
 ### 6.2 Ejemplo
 Si `cd1(5) = 0.4` y `cd2(5) = 0.7`, entonces:
-$$
-f_{A \cup B}(5) = 0.7
-$$
+$$f_{A \cup B}(5) = 0.7$$
 
 ### 6.3 Pila de llamados
 ```mermaid
@@ -187,9 +184,7 @@ En el código:
 
 ### 7.2 Ejemplo
 Si `cd1(5) = 0.4` y `cd2(5) = 0.7`, entonces:
-$$
-f_{A \cap B}(5) = 0.4
-$$
+$$f_{A \cap B}(5) = 0.4$$
 
 ### 7.3 Pila de llamados
 ```mermaid
