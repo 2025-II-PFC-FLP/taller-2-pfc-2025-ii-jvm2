@@ -410,11 +410,11 @@ $$
 
 ```mermaid
 graph TD
-  A0[aux(0)] --> A1[aux(1)]
-  A1 --> A2[aux(2)]
-  A2 --> DOTS[...]
-  DOTS --> Af[aux(1000)]
-  Af --> End[true]
+  A0["aux(0)"] --> A1["aux(1)"]
+  A1 --> A2["aux(2)"]
+  A2 --> DOTS["..."]
+  DOTS --> Af["aux(1000)"]
+  Af --> End["true"]
 ```
 
 **Conclusión:**  
