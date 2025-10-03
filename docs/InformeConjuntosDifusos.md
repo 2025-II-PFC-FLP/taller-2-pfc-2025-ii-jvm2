@@ -200,7 +200,6 @@ sequenceDiagram
 ```
 # Informe de Corrección
 
-**Fundamentos de Programación Funcional y Concurrente**  
 **Informe de corrección sobre las funciones implementadas en `ConjuntosDifusos`.**
 
 ---
@@ -244,15 +243,15 @@ def grande(d: Int, e: Int): ConjDifuso = {
 ### Argumentación de corrección
 
 Queremos demostrar que:
-- `∀ x ∈ ℤ⁺ : P_grande(x) = f(x)`
+- ∀ x ∈ ℤ : P_grande(x) = f(x)
 
-- **Caso base**: `x ≤ 0`  
-  `P_grande(x) = 0.0` y `f(x) = 0`. Por tanto coinciden.
+- **Caso base**: x ≤ 0  
+  P_grande(x) = 0.0 y f(x) = 0. Por tanto coinciden.
 
-- **Caso inductivo**: `x > 0`  
-  `P_grande(x) = (x / (x + d))^e`. Este valor satisface `0 < P_grande(x) < 1` para `d >= 1, e >= 1`. Además, el uso de `math.max` y `math.min` garantiza que el valor final se mantenga en `[0,1]`.
+- **Caso (x > 0)**:  
+  P_grande(x) = (x / (x + d))^e. Este valor satisface 0 < P_grande(x) < 1 para d ≥ 1, e ≥ 1. Además, `math.max` y `math.min` garantizan que el valor final pertenezca a [0,1].
 
-**Conclusión:** para todos los enteros `x`, `P_grande(x)` cumple la especificación `f(x)`.
+**Conclusión:** para todo x ∈ ℤ, P_grande(x) = f(x).
 
 ---
 
@@ -260,13 +259,11 @@ Queremos demostrar que:
 
 ### Definición matemática (texto)
 
-El complemento de un conjunto difuso `S` se define por:
-
+El complemento de un conjunto difuso S se define por:
 ```
 f_notS(x) = 1 - f_S(x)
 ```
-
-y debe permanecer en `[0,1]`.
+y debe permanecer en [0,1].
 
 ### Código en Scala
 
@@ -282,10 +279,10 @@ def complemento(c: ConjDifuso): ConjDifuso = {
 
 ### Argumentación de corrección
 
-- Para cualquier `x`, si `c(x) ∈ [0,1]` entonces `1 - c(x) ∈ [0,1]`.
-- La llamada a `math.max(0.0, math.min(1.0, res))` evita salidas del intervalo por redondeos o valores fuera de rango.
+- Para cualquier x, si c(x) ∈ [0,1] entonces 1 - c(x) ∈ [0,1].
+- El uso de `math.max(0.0, math.min(1.0, res))` protege contra errores numéricos.
 
-**Conclusión:** `P_complemento(x) = 1 - f(x)` para todo `x`.
+**Conclusión:** ∀ x ∈ ℤ : P_complemento(x) = 1 - f(x).
 
 ---
 
@@ -307,9 +304,9 @@ def union(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 
 ### Argumentación de corrección
 
-`Math.max(cd1(x), cd2(x))` devuelve exactamente el mayor grado de pertenencia entre los dos conjuntos, que es la definición de unión difusa.
+`Math.max(cd1(x), cd2(x))` devuelve el mayor grado de pertenencia entre los dos conjuntos, que es la definición de unión difusa.
 
-**Conclusión:** `P_union(x) = f_{S1 ∪ S2}(x)`.
+**Conclusión:** ∀ x ∈ ℤ : P_union(x) = f_{S1 ∪ S2}(x).
 
 ---
 
@@ -331,9 +328,9 @@ def interseccion(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 
 ### Argumentación de corrección
 
-`Math.min(cd1(x), cd2(x))` devuelve el menor grado de pertenencia entre los dos conjuntos, que es la definición de intersección difusa.
+`Math.min(cd1(x), cd2(x))` devuelve el menor grado de pertenencia entre los dos conjuntos, que es la intersección difusa.
 
-**Conclusión:** `P_interseccion(x) = f_{S1 ∩ S2}(x)`.
+**Conclusión:** ∀ x ∈ ℤ : P_interseccion(x) = f_{S1 ∩ S2}(x).
 
 ---
 
@@ -341,11 +338,7 @@ def interseccion(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 
 ### Definición matemática (texto)
 
-```
-S1 ⊆ S2  <=>  forall x in U : f_{S1}(x) <= f_{S2}(x)
-```
-
-Con `U = [0,1000]` (enteros de 0 a 1000).
+S1 ⊆ S2  <=>  forall x in U : f_{S1}(x) <= f_{S2}(x), con U = [0,1000].
 
 ### Código en Scala
 
@@ -363,15 +356,12 @@ def inclusion(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 
 ### Argumentación de corrección
 
-```
-P_inclusion(cd1, cd2) = true  <=>  forall x in [0,1000] : cd1(x) <= cd2(x)
-```
-
-- **Caso base (i = 0):** evalúa `cd1(0) <= cd2(0)`. Si es falso, retorna `false`.
-- **Paso inductivo (i = k+1):** si hasta `k` todo cumple y además `cd1(k+1) <= cd2(k+1)`, se sigue.
-- **Caso final:** si `i > 1000`, retorna `true`.
+- **Caso base (i = 0):** se evalúa cd1(0) <= cd2(0). Si es falso, la función devuelve `false`.
+- **Paso inductivo:** si cd1(0..k) <= cd2(0..k) y cd1(k+1) <= cd2(k+1), se continúa.
+- **Caso final:** si i > 1000, se devuelve `true`.
 
 ### Representación de la pila de llamadas (Mermaid)
+> Nota: este bloque **debe** quedar exactamente así (sin líneas `---` dentro del bloque).
 
 ```mermaid
 flowchart TD
@@ -382,7 +372,7 @@ flowchart TD
   Af --> End[true]
 ```
 
-**Conclusión:** `P_inclusion(cd1, cd2)` devuelve `true` exactamente cuando `cd1(x) <= cd2(x)` para todo `x` en `[0,1000]`.
+**Conclusión:** P_inclusion(cd1, cd2) = true  ⇔  para todo x en [0,1000], cd1(x) <= cd2(x).
 
 ---
 
@@ -390,9 +380,7 @@ flowchart TD
 
 ### Definición matemática (texto)
 
-```
 S1 = S2  <=>  (S1 ⊆ S2) and (S2 ⊆ S1)
-```
 
 ### Código en Scala
 
@@ -404,13 +392,8 @@ def igualdad(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 
 ### Argumentación de corrección
 
-La igualdad se reduce a comprobar inclusión mutua.  
-El operador `&&` garantiza que ambas condiciones sean verdaderas.
+La igualdad se reduce a comprobar inclusión mutua.
 
-**Conclusión:** `P_igualdad(cd1, cd2)` es verdadero si y solo si `cd1(x) == cd2(x)` para todo `x` en `[0,1000]`.
+**Conclusión:** P_igualdad(cd1, cd2) es verdadero si y solo si cd1(x) == cd2(x) para todo x en [0,1000].
 
 ---
-
-# Conclusión general
-
-Todas las funciones implementadas en `ConjuntosDifusos` satisfacen su especificación matemática.  
