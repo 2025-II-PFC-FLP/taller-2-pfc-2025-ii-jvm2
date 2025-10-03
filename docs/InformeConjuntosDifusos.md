@@ -212,12 +212,13 @@ sequenceDiagram
 La función `grande(d, e)` construye un conjunto difuso de números enteros "grandes".  
 Se define como:
 
-$$
-f(x) = \begin{cases}
+\[
+f(x) =
+\begin{cases}
 0 & x \leq 0 \\
 \left(\frac{x}{x+d}\right)^e & x > 0
 \end{cases}
-$$
+\]
 
 Donde:
 - $d \geq 1$ controla el desplazamiento.
@@ -247,26 +248,26 @@ def grande(d: Int, e: Int): ConjDifuso = {
 
 Queremos demostrar que:
 
-$$
-\forall x \in \mathbb{Z}^+ : P_{grande}(x) == f(x)
-$$
+\[
+\forall x \in \mathbb{Z}^+ : P_{grande}(x) = f(x)
+\]
 
 - **Caso base**: $x \leq 0$  
-  $$
-  P_{grande}(x) = 0.0 \quad \land \quad f(x) = 0
-  $$
+  \[
+  P_{grande}(x) = 0.0, \quad f(x) = 0
+  \]
 
 - **Caso inductivo**: $x > 0$  
-  $$
+  \[
   P_{grande}(x) = \left(\frac{x}{x+d}\right)^e
-  $$
+  \]
 
 Este valor siempre cumple $0 < P_{grande}(x) < 1$, y al aplicar `math.max` y `math.min`, se garantiza que el resultado esté en $[0,1]$.
 
 **Conclusión:**  
-$$
-\forall x \in \mathbb{Z} : P_{grande}(x) == f(x)
-$$
+\[
+\forall x \in \mathbb{Z} : P_{grande}(x) = f(x)
+\]
 
 ---
 
@@ -276,9 +277,9 @@ $$
 
 El complemento de un conjunto difuso $S$ está dado por:
 
-$$
+\[
 f_{\neg S}(x) = 1 - f_S(x)
-$$
+\]
 
 con la condición de mantener el rango en $[0,1]$.
 
@@ -298,17 +299,17 @@ def complemento(c: ConjDifuso): ConjDifuso = {
 
 Queremos demostrar que:
 
-$$
-\forall x \in \mathbb{Z} : P_{complemento}(x) == 1 - f(x)
-$$
+\[
+\forall x \in \mathbb{Z} : P_{complemento}(x) = 1 - f(x)
+\]
 
 - Para cualquier $x$, si $c(x) \in [0,1]$, entonces $1 - c(x) \in [0,1]$.
 - La instrucción `math.max(0.0, math.min(1.0, res))` garantiza que el resultado nunca salga de ese intervalo.
 
 **Conclusión:**  
-$$
-\forall x \in \mathbb{Z} : P_{complemento}(x) == f_{\neg S}(x)
-$$
+\[
+\forall x \in \mathbb{Z} : P_{complemento}(x) = f_{\neg S}(x)
+\]
 
 ---
 
@@ -318,9 +319,9 @@ $$
 
 La unión de dos conjuntos difusos $S_1$ y $S_2$ está definida como:
 
-$$
+\[
 f_{S_1 \cup S_2}(x) = \max(f_{S_1}(x), f_{S_2}(x))
-$$
+\]
 
 ### Código en Scala
 
@@ -336,9 +337,9 @@ def union(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 - `Math.max(cd1(x), cd2(x))` cumple exactamente esta propiedad.
 
 **Conclusión:**  
-$$
-\forall x \in \mathbb{Z} : P_{union}(x) == f_{S_1 \cup S_2}(x)
-$$
+\[
+\forall x \in \mathbb{Z} : P_{union}(x) = f_{S_1 \cup S_2}(x)
+\]
 
 ---
 
@@ -348,9 +349,9 @@ $$
 
 La intersección de dos conjuntos difusos $S_1$ y $S_2$ está definida como:
 
-$$
+\[
 f_{S_1 \cap S_2}(x) = \min(f_{S_1}(x), f_{S_2}(x))
-$$
+\]
 
 ### Código en Scala
 
@@ -366,9 +367,9 @@ def interseccion(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 - `Math.min(cd1(x), cd2(x))` cumple esta propiedad directamente.
 
 **Conclusión:**  
-$$
-\forall x \in \mathbb{Z} : P_{interseccion}(x) == f_{S_1 \cap S_2}(x)
-$$
+\[
+\forall x \in \mathbb{Z} : P_{interseccion}(x) = f_{S_1 \cap S_2}(x)
+\]
 
 ---
 
@@ -378,9 +379,9 @@ $$
 
 Se dice que $S_1 \subseteq S_2$ si y sólo si:
 
-$$
+\[
 \forall x \in U : f_{S_1}(x) \leq f_{S_2}(x)
-$$
+\]
 
 En este taller se evalúa el universo en $[0, 1000]$.
 
@@ -402,9 +403,9 @@ def inclusion(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 
 Queremos demostrar que:
 
-$$
+\[
 P_{inclusion}(cd1, cd2) = true \iff \forall x \in [0,1000] : cd1(x) \leq cd2(x)
-$$
+\]
 
 - **Caso base:** $i = 0$  
   Se evalúa $cd1(0) \leq cd2(0)$.  
@@ -412,9 +413,9 @@ $$
 
 - **Caso inductivo:** $i = k+1$  
   La función hace una **llamada de cola**:  
-  $$
-  aux(k) = true \rightarrow aux(k+1)
-  $$
+  \[
+  aux(k) = true \implies aux(k+1)
+  \]
 
 - **Caso final:** $i > 1000$  
   En este punto, ya se han verificado todos los elementos, y se retorna `true`.
@@ -430,9 +431,9 @@ graph TD
 ```
 
 **Conclusión:**  
-$$
-\forall x \in [0,1000] : P_{inclusion}(cd1, cd2) == (cd1(x) \leq cd2(x))
-$$
+\[
+\forall x \in [0,1000] : P_{inclusion}(cd1, cd2) = (cd1(x) \leq cd2(x))
+\]
 
 ---
 
@@ -442,9 +443,9 @@ $$
 
 Dos conjuntos difusos son iguales si:
 
-$$
+\[
 S_1 = S_2 \iff (S_1 \subseteq S_2) \land (S_2 \subseteq S_1)
-$$
+\]
 
 ### Código en Scala
 
@@ -460,13 +461,14 @@ def igualdad(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 - El programa verifica ambas condiciones con `&&`.
 
 **Conclusión:**  
-$$
-\forall x \in [0,1000] : P_{igualdad}(cd1, cd2) == (cd1(x) == cd2(x))
-$$
+\[
+\forall x \in [0,1000] : P_{igualdad}(cd1, cd2) = (cd1(x) = cd2(x))
+\]
 
 ---
 
-# Conclusión informe corrección
+# Conclusión general
+
 Cada función implementada cumple exactamente con su **definición matemática**:
 
 - `grande(d,e)` genera un conjunto difuso de números grandes.
