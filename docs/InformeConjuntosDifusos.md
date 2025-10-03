@@ -198,19 +198,19 @@ sequenceDiagram
     cd2-->>interseccion: 0.7
     interseccion-->>Main: min(0.4, 0.7) = 0.4
 ```
-# Informe de Corrección (versión corregida)
+# Informe de Corrección
+
 
 **Informe de corrección sobre las funciones implementadas en `ConjuntosDifusos`.**
-
 
 
 ---
 
 ## Función `grande(d, e)`
 
-### Definición matemática (texto compatible GitHub)
+### Definición matemática
 
-La función `grande(d, e)` construye un conjunto difuso de números enteros "grandes". Se puede expresar así:
+La función `grande(d, e)`:
 
 ```
 f(x) =
@@ -218,11 +218,7 @@ f(x) =
   (x / (x + d))^e if x > 0
 ```
 
-Donde:
-- `d >= 1` controla el desplazamiento.
-- `e >= 1` controla la intensidad del crecimiento.
-
-Además, se asegura que `f(x)` pertenezca al intervalo `[0, 1]`.
+Donde `d >= 1` y `e >= 1`. Se acota a `[0,1]` mediante `math.max` y `math.min`.
 
 ### Código en Scala
 
@@ -242,30 +238,15 @@ def grande(d: Int, e: Int): ConjDifuso = {
 }
 ```
 
-### Argumentación de corrección
-
-Queremos demostrar que:
-- ∀ x ∈ ℤ : P_grande(x) = f(x)
-
-- **Caso base**: x ≤ 0  
-  P_grande(x) = 0.0 y f(x) = 0. Por tanto coinciden.
-
-- **Caso (x > 0)**:  
-  P_grande(x) = (x / (x + d))^e. Este valor satisface 0 < P_grande(x) < 1 para d ≥ 1, e ≥ 1. Además, `math.max` y `math.min` garantizan que el valor final pertenezca a [0,1].
-
-**Conclusión:** para todo x ∈ ℤ, P_grande(x) = f(x).
-
 ---
 
 ## Función `complemento(c)`
 
-### Definición matemática (texto)
+### Definición matemática
 
-El complemento de un conjunto difuso S se define por:
 ```
 f_notS(x) = 1 - f_S(x)
 ```
-y debe permanecer en [0,1].
 
 ### Código en Scala
 
@@ -279,18 +260,11 @@ def complemento(c: ConjDifuso): ConjDifuso = {
 }
 ```
 
-### Argumentación de corrección
-
-- Para cualquier x, si c(x) ∈ [0,1] entonces 1 - c(x) ∈ [0,1].
-- El uso de `math.max(0.0, math.min(1.0, res))` protege contra errores numéricos.
-
-**Conclusión:** ∀ x ∈ ℤ : P_complemento(x) = 1 - f(x).
-
 ---
 
 ## Función `union(cd1, cd2)`
 
-### Definición matemática (texto)
+### Definición matemática
 
 ```
 f_{S1 ∪ S2}(x) = max( f_{S1}(x), f_{S2}(x) )
@@ -304,17 +278,11 @@ def union(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 }
 ```
 
-### Argumentación de corrección
-
-`Math.max(cd1(x), cd2(x))` devuelve el mayor grado de pertenencia entre los dos conjuntos, que es la definición de unión difusa.
-
-**Conclusión:** ∀ x ∈ ℤ : P_union(x) = f_{S1 ∪ S2}(x).
-
 ---
 
 ## Función `interseccion(cd1, cd2)`
 
-### Definición matemática (texto)
+### Definición matemática
 
 ```
 f_{S1 ∩ S2}(x) = min( f_{S1}(x), f_{S2}(x) )
@@ -328,19 +296,47 @@ def interseccion(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 }
 ```
 
-### Argumentación de corrección
-
-`Math.min(cd1(x), cd2(x))` devuelve el menor grado de pertenencia entre los dos conjuntos, que es la intersección difusa.
-
-**Conclusión:** ∀ x ∈ ℤ : P_interseccion(x) = f_{S1 ∩ S2}(x).
-
 ---
 
 ## Función `inclusion(cd1, cd2)`
 
-### Definición matemática (texto)
+### 4.1 Explicación
+Un conjunto difuso `A` está incluido en `B` si para todo `x` se cumple:
 
-S1 ⊆ S2  <=>  forall x in U : f_{S1}(x) <= f_{S2}(x), con U = [0,1000].
+$$
+f_A(x) \leq f_B(x)
+$$
+
+En el código:
+- Se implementa una función auxiliar recursiva `aux(i)` con **recursión de cola**.
+- La función itera desde `i = 0` hasta `1000`, comparando los valores.
+- Si en algún `i` ocurre que `cd1(i) > cd2(i)`, retorna `false`.
+- Si se recorren todos los valores sin problema, retorna `true`.
+
+### 4.2 Ejemplo
+Si para todos los `x` en el rango `0..1000` se cumple `cd1(x) <= cd2(x)`, entonces `inclusion(cd1, cd2)` es `true`.  
+Por ejemplo:
+- Si `cd1(5) = 0.4` y `cd2(5) = 0.6` → la condición se cumple.
+- Si en algún `x` se diera que `cd1(x) > cd2(x)` → devuelve `false`.
+
+### 4.3 Pila de llamados (Mermaid — **sequenceDiagram**, seguro)
+**Este bloque está aislado: sólo contiene el diagrama.**
+
+```mermaid
+sequenceDiagram
+    participant Main
+    participant inclusion as Inclusion
+    participant aux as Aux
+    Main->>Inclusion: inclusion(cd1, cd2)
+    Inclusion->>Aux: aux(0)
+    Aux->>Aux: aux(1)
+    Aux->>Aux: aux(2)
+    Aux->>Aux: aux(3)
+    %% ... el proceso continúa hasta aux(1000) ...
+    Aux-->>Inclusion: true/false
+    Inclusion-->>Main: resultado
+```
+
 
 ### Código en Scala
 
@@ -356,33 +352,33 @@ def inclusion(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 }
 ```
 
-### Argumentación de corrección
-
-- **Caso base (i = 0):** se evalúa cd1(0) <= cd2(0). Si es falso, la función devuelve `false`.
-- **Paso inductivo:** si cd1(0..k) <= cd2(0..k) y cd1(k+1) <= cd2(k+1), se continúa.
-- **Caso final:** si i > 1000, se devuelve `true`.
-
-### Representación de la pila de llamadas (Mermaid)
-> Nota: este bloque **debe** quedar exactamente así (sin líneas `---` dentro del bloque).
-
-```mermaid
-flowchart TD
-  A0[aux(0)] --> A1[aux(1)]
-  A1 --> A2[aux(2)]
-  A2 --> A3[...]
-  A3 --> Af[aux(1000)]
-  Af --> End[true]
-```
-
-**Conclusión:** P_inclusion(cd1, cd2) = true  ⇔  para todo x en [0,1000], cd1(x) <= cd2(x).
+**Conclusión:** `P_inclusion(cd1, cd2) = true` ⇔ para todo `x` en `[0,1000]`, `cd1(x) <= cd2(x)`.
 
 ---
 
 ## Función `igualdad(cd1, cd2)`
 
-### Definición matemática (texto)
+### 5.1 Explicación
+Dos conjuntos difusos `A` y `B` son iguales si cada uno está incluido en el otro:
 
-S1 = S2  <=>  (S1 ⊆ S2) and (S2 ⊆ S1)
+$$
+A = B \iff (A \subseteq B) \wedge (B \subseteq A)
+$$
+
+### 5.2 Pila de llamados (Mermaid — sequenceDiagram)
+
+```mermaid
+sequenceDiagram
+    participant Main
+    participant igualdad as Igualdad
+    participant inclusion as Inclusion
+    Main->>Igualdad: igualdad(cd1, cd2)
+    Igualdad->>Inclusion: inclusion(cd1, cd2)
+    Inclusion-->>Igualdad: true/false
+    Igualdad->>Inclusion: inclusion(cd2, cd1)
+    Inclusion-->>Igualdad: true/false
+    Igualdad-->>Main: resultado
+```
 
 ### Código en Scala
 
@@ -392,9 +388,55 @@ def igualdad(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 }
 ```
 
-### Argumentación de corrección
+---
 
-La igualdad se reduce a comprobar inclusión mutua.
+## 6. Función `union` (ejemplo con pila de llamados)
 
-**Conclusión:** P_igualdad(cd1, cd2) es verdadero si y solo si cd1(x) == cd2(x) para todo x en [0,1000].
+```mermaid
+sequenceDiagram
+    participant Main
+    participant union as Union
+    participant cd1 as CD1
+    participant cd2 as CD2
+    Main->>Union: union(cd1, cd2)(5)
+    Union->>CD1: cd1(5)
+    CD1-->>Union: 0.4
+    Union->>CD2: cd2(5)
+    CD2-->>Union: 0.7
+    Union-->>Main: max(0.4, 0.7) = 0.7
 ```
+
+### Código en Scala
+
+```scala
+def union(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
+  (x: Int) => Math.max(cd1(x), cd2(x))
+}
+```
+
+---
+
+## 7. Función `interseccion` (ejemplo con pila de llamados)
+
+```mermaid
+sequenceDiagram
+    participant Main
+    participant interseccion as Interseccion
+    participant cd1 as CD1
+    participant cd2 as CD2
+    Main->>Interseccion: interseccion(cd1, cd2)(5)
+    Interseccion->>CD1: cd1(5)
+    CD1-->>Interseccion: 0.4
+    Interseccion->>CD2: cd2(5)
+    CD2-->>Interseccion: 0.7
+    Interseccion-->>Main: min(0.4, 0.7) = 0.4
+```
+
+### Código en Scala
+
+```scala
+def interseccion(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
+  (x: Int) => Math.min(cd1(x), cd2(x))
+}
+```
+
