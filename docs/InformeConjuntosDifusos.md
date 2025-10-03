@@ -466,7 +466,7 @@ $$
 
 ---
 
-# Conclusión 
+# Conclusión informe corrección
 Cada función implementada cumple exactamente con su **definición matemática**:
 
 - `grande(d,e)` genera un conjunto difuso de números grandes.
