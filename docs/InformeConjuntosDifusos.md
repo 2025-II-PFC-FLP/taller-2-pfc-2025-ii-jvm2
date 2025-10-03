@@ -409,7 +409,7 @@ $$
 ### Representación de la pila de llamadas
 
 ```mermaid
- graph TD
+graph TD
   A0[aux(0)] --> A1[aux(1)]
   A1 --> A2[aux(2)]
   A2 --> DOTS[...]
