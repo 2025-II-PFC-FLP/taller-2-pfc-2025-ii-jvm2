@@ -198,9 +198,11 @@ sequenceDiagram
     cd2-->>interseccion: 0.7
     interseccion-->>Main: min(0.4, 0.7) = 0.4
 ```
-# Informe de Corrección
+# Informe de Corrección (versión corregida)
 
 **Informe de corrección sobre las funciones implementadas en `ConjuntosDifusos`.**
+
+
 
 ---
 
@@ -395,5 +397,4 @@ def igualdad(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 La igualdad se reduce a comprobar inclusión mutua.
 
 **Conclusión:** P_igualdad(cd1, cd2) es verdadero si y solo si cd1(x) == cd2(x) para todo x en [0,1000].
-
----
+```
