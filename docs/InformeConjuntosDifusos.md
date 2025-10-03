@@ -203,6 +203,7 @@ sequenceDiagram
 **Fundamentos de Programación Funcional y Concurrente**  
 **Informe de corrección sobre las funciones implementadas en `ConjuntosDifusos`.**
 
+---
 
 ## Función `grande(d, e)`
 
@@ -240,7 +241,7 @@ def grande(d: Int, e: Int): ConjDifuso = {
 }
 ```
 
-### Argumentación de corrección (forma legible en GitHub)
+### Argumentación de corrección
 
 Queremos demostrar que:
 - `∀ x ∈ ℤ⁺ : P_grande(x) = f(x)`
@@ -260,9 +261,11 @@ Queremos demostrar que:
 ### Definición matemática (texto)
 
 El complemento de un conjunto difuso `S` se define por:
+
 ```
 f_notS(x) = 1 - f_S(x)
 ```
+
 y debe permanecer en `[0,1]`.
 
 ### Código en Scala
@@ -282,7 +285,7 @@ def complemento(c: ConjDifuso): ConjDifuso = {
 - Para cualquier `x`, si `c(x) ∈ [0,1]` entonces `1 - c(x) ∈ [0,1]`.
 - La llamada a `math.max(0.0, math.min(1.0, res))` evita salidas del intervalo por redondeos o valores fuera de rango.
 
-**Conclusión:** `P_complemento(x) = 1 - f(x)` para todo `x` (representado en el dominio entero considerado).
+**Conclusión:** `P_complemento(x) = 1 - f(x)` para todo `x`.
 
 ---
 
@@ -290,7 +293,6 @@ def complemento(c: ConjDifuso): ConjDifuso = {
 
 ### Definición matemática (texto)
 
-La unión difusa de `S1` y `S2` es:
 ```
 f_{S1 ∪ S2}(x) = max( f_{S1}(x), f_{S2}(x) )
 ```
@@ -307,7 +309,7 @@ def union(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 
 `Math.max(cd1(x), cd2(x))` devuelve exactamente el mayor grado de pertenencia entre los dos conjuntos, que es la definición de unión difusa.
 
-**Conclusión:** para todo `x`, `P_union(x) = f_{S1 ∪ S2}(x)`.
+**Conclusión:** `P_union(x) = f_{S1 ∪ S2}(x)`.
 
 ---
 
@@ -315,7 +317,6 @@ def union(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 
 ### Definición matemática (texto)
 
-La intersección difusa de `S1` y `S2` es:
 ```
 f_{S1 ∩ S2}(x) = min( f_{S1}(x), f_{S2}(x) )
 ```
@@ -330,9 +331,9 @@ def interseccion(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 
 ### Argumentación de corrección
 
-`Math.min(cd1(x), cd2(x))` devuelve exactamente el menor grado de pertenencia entre los dos conjuntos, que es la definición de intersección difusa.
+`Math.min(cd1(x), cd2(x))` devuelve el menor grado de pertenencia entre los dos conjuntos, que es la definición de intersección difusa.
 
-**Conclusión:** para todo `x`, `P_interseccion(x) = f_{S1 ∩ S2}(x)`.
+**Conclusión:** `P_interseccion(x) = f_{S1 ∩ S2}(x)`.
 
 ---
 
@@ -340,12 +341,11 @@ def interseccion(cd1: ConjDifuso, cd2: ConjDifuso): ConjDifuso = {
 
 ### Definición matemática (texto)
 
-Se dice que `S1 ⊆ S2` si y sólo si:
 ```
-forall x in U : f_{S1}(x) <= f_{S2}(x)
+S1 ⊆ S2  <=>  forall x in U : f_{S1}(x) <= f_{S2}(x)
 ```
 
-En este taller se toma `U = [0, 1000]` (enteros de 0 a 1000).
+Con `U = [0,1000]` (enteros de 0 a 1000).
 
 ### Código en Scala
 
@@ -363,18 +363,15 @@ def inclusion(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 
 ### Argumentación de corrección
 
-Queremos demostrar que:
 ```
 P_inclusion(cd1, cd2) = true  <=>  forall x in [0,1000] : cd1(x) <= cd2(x)
 ```
 
-- **Caso base (i = 0):** se evalúa `cd1(0) <= cd2(0)`. Si es falso, la función retorna `false`. Si es verdadero, continua.
-- **Paso inductivo (i = k+1):** si `aux(k)` ha comprobado `cd1(0..k) <= cd2(0..k)` y `cd1(k+1) <= cd2(k+1)` entonces `aux(k+1)` es verdadero; la llamada es de cola.
-- **Caso final:** si `i > 1000` se retorna `true` (se comprobó todo el rango).
+- **Caso base (i = 0):** evalúa `cd1(0) <= cd2(0)`. Si es falso, retorna `false`.
+- **Paso inductivo (i = k+1):** si hasta `k` todo cumple y además `cd1(k+1) <= cd2(k+1)`, se sigue.
+- **Caso final:** si `i > 1000`, retorna `true`.
 
 ### Representación de la pila de llamadas (Mermaid)
-
-> Nota: GitHub renderiza Mermaid si el bloque está correctamente formateado. Aquí se usa la sintaxis recomendada `flowchart`.
 
 ```mermaid
 flowchart TD
@@ -385,7 +382,7 @@ flowchart TD
   Af --> End[true]
 ```
 
-**Conclusión:** para todo `x` en `[0,1000]`, `P_inclusion(cd1, cd2)` devuelve `true` exactamente cuando `cd1(x) <= cd2(x)`.
+**Conclusión:** `P_inclusion(cd1, cd2)` devuelve `true` exactamente cuando `cd1(x) <= cd2(x)` para todo `x` en `[0,1000]`.
 
 ---
 
@@ -393,9 +390,8 @@ flowchart TD
 
 ### Definición matemática (texto)
 
-Dos conjuntos difusos son iguales si:
 ```
-S1 = S2 <=> (S1 ⊆ S2) and (S2 ⊆ S1)
+S1 = S2  <=>  (S1 ⊆ S2) and (S2 ⊆ S1)
 ```
 
 ### Código en Scala
@@ -408,19 +404,13 @@ def igualdad(cd1: ConjDifuso, cd2: ConjDifuso): Boolean = {
 
 ### Argumentación de corrección
 
-- La igualdad se reduce a comprobar inclusión mutua. El operador `&&` garantiza que ambas condiciones sean verdaderas.
+La igualdad se reduce a comprobar inclusión mutua.  
+El operador `&&` garantiza que ambas condiciones sean verdaderas.
 
-**Conclusión:** para todo `x` en `[0,1000]`, `P_igualdad(cd1, cd2)` es verdadero si y solo si `cd1(x) == cd2(x)`.
+**Conclusión:** `P_igualdad(cd1, cd2)` es verdadero si y solo si `cd1(x) == cd2(x)` para todo `x` en `[0,1000]`.
 
 ---
 
 # Conclusión general
 
 Todas las funciones implementadas en `ConjuntosDifusos` satisfacen su especificación matemática.  
-Se han adaptado las expresiones para que se muestren correctamente en la vista de GitHub (sin LaTeX crudo).
-
-Si quieres, puedo además:
-- Generar imágenes PNG para las ecuaciones y sustituir los bloques de texto por imágenes (opción visual).
-- Añadir ejemplos de casos de prueba (5 por función) en un archivo `tests/` o en `README.md`.
-- Preparar el commit y PR sugeridos.
-
