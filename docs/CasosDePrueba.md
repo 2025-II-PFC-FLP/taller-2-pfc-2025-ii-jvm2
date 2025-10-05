@@ -27,13 +27,13 @@ Devuelve el valor mayor entre dos grados de pertenencia.
 Calcula el complemento de un conjunto difuso: `1-c(x)`
 
 
-| Nº    | Entrada `c(x)` | x | Salida esperada | Explicación        |
-|:------|:---------------|:--|:---------------:|:-------------------|
-| 1     | 0.2            | 3 |       0.8       | $ 1 - 0.2 = 0.8  $ |
-| 2     | 0.0            | 1 |       1.0       | $1 - 0 = 1  $      |
-| 3     | 0.5            | 2 |       0.5       | $1 - 0.5 = 0.5  $  |
-| 4     | 1.0            | 4 |       0.0       | Complemento total  |
-| 5     | 0.75           | 6 |      0.25       | Grado intermedio   |
+| Nº    | Entrada `c(x)` | x | Salida esperada | Explicación       |
+|:------|:---------------|:--|:---------------:|:------------------|
+| 1     | 0.2            | 3 |       0.8       | $ 1 - 0.2 = 0.8 $ |
+| 2     | 0.0            | 1 |       1.0       | $1 - 0 = 1 $      |
+| 3     | 0.5            | 2 |       0.5       | $1 - 0.5 = 0.5 $  |
+| 4     | 1.0            | 4 |       0.0       | Complemento total |
+| 5     | 0.75           | 6 |      0.25       | Grado intermedio  |
 
 ---
 
