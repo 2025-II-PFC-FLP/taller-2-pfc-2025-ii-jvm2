@@ -53,9 +53,9 @@ El siguiente diagrama representa el flujo de llamadas internas de la función au
 
 ```mermaid
 graph TD
-    A[Inicio: inclusion(cd1, cd2)] --> B[Llamar inclusionAux(cd1, cd2, i = 0)]
+    A[Inicio inclusion cd1, cd2] --> B[Llamar inclusionAux cd1, cd2, i = 0]
     B --> C{¿i < longitud?}
-    C -->|Sí| D[Comparar cd1(i) ≤ cd2(i)]
+    C -->|Sí| D[Comparar cd1_i <= cd2_i]
     D -->|Verdadero| E[Incrementar i y volver a inclusionAux]
     D -->|Falso| F[Retornar false]
     E --> C
@@ -115,15 +115,16 @@ Devuelve el mínimo entre los valores de pertenencia de dos conjuntos.
 
 ```mermaid
 flowchart TD
-A[Inicio del programa] --> B[Definir conjuntos difusos cd1 y cd2]
-B --> C[Llamar grande(d, e)]
-C --> D[Llamar complemento(cd1)]
-D --> E[Llamar union(cd1, cd2)]
-E --> F[Llamar interseccion(cd1, cd2)]
-F --> G[Llamar inclusion(cd1, cd2)]
-G --> H[Llamar igualdad(cd1, cd2)]
-H --> I[Mostrar resultados]
-I --> J[Fin del programa]
+    A[Inicio del programa] --> B[Definir conjuntos difusos cd1 y cd2]
+    B --> C[Llamar grande d, e]
+    C --> D[Llamar complemento cd1]
+    D --> E[Llamar union cd1, cd2]
+    E --> F[Llamar interseccion cd1, cd2]
+    F --> G[Llamar inclusion cd1, cd2]
+    G --> H[Llamar igualdad cd1, cd2]
+    H --> I[Mostrar resultados]
+    I --> J[Fin del programa]
+
 
 ```
 
