@@ -477,12 +477,25 @@ Cada función fue probada con al menos cinco casos.
 Devuelve el valor mayor entre dos grados de pertenencia.
 
 | Nº | Entrada `(d, e)` | Salida esperada | Explicación       |
-|:--:|:-----------------|:----------------|:------------------|
-| 1 | (0.2, 0.7)       | 0.7             | Mayor es 0.7      |  
-| 2 | (0.5, 0.3)       | 0.5             | Mayor es 0.5      |  
-| 3 | (0.0, 0.0)       | 0.0             | Ambos son iguales |  
-| 4 | (0.9, 0.4)       | 0.9             | Mayor es 0.9      |  
-| 5 | (0.1, 1.0)       | 1.0             | Mayor es es 1.0   |  
+|:--:|:-----------------|:---------------:|:------------------|
+| 1 | (0.2, 0.7)       |       0.7       | Mayor es 0.7      |  
+| 2 | (0.5, 0.3)       |       0.5       | Mayor es 0.5      |  
+| 3 | (0.0, 0.0)       |       0.0       | Ambos son iguales |  
+| 4 | (0.9, 0.4)       |       0.9       | Mayor es 0.9      |  
+| 5 | (0.1, 1.0)       |       1.0       | Mayor es es 1.0   |  
+
+## _Ejemplo Propio_
+```Scala
+ConjuntosDifusos.grande(d,e)
+```
+| Caso                                               |       Entrada       | Resultado esperado  |
+|:---------------------------------------------------|:-------------------:|:--------------------|
+| Mayor `d` implica menor pertenencia para mismo `x` |`d=1, e=2 y d=5, e=2 ` | `g1(10) > g5(10)`     |
+| Mayor `e` suaviza la transición                    |  `e=2, e=5 (d=1)  `   | `g2(10) > g5(10)`     |
+| Monotonía creciente                                |      `x=5, x=10`      | `g(5) ≤ g(10)`        |
+| Límite para valores grandes de x                   |      `x=1000   `      | `0.99 < g(1000) < 1`  |
+| Transición inicial                                 |      `x=0, x=1`       | `g(0)=0 y g(1)>0 `    |
+
 
 ---
 
@@ -497,6 +510,18 @@ Calcula el complemento de un conjunto difuso: `1-c(x)`
 | 3     | 0.5            | 2 |       0.5       | $1 - 0.5 = 0.5$   |
 | 4     | 1.0            | 4 |       0.0       | Complemento total |
 | 5     | 0.75           | 6 |      0.25       | Grado intermedio  |
+
+## _Ejemplo Propio_
+```Scala
+ConjuntosDifusos.complemento(f)
+```
+| Caso                | Entrada                               | Resultado esperado  |
+|:--------------------|:--------------------------------------|:--------------------|
+| Complemento básico  | `grande(1,2)`                         | `cg(x) = 1 - g(x)`    |
+| Doble complemento   | `complemento(complemento(g)) `        | `= g(x) `             |
+| Inversión del orden | ` g(5) ≤ g(10) ⇒ cg(5) ≥ cg(10)  `    | `true  `              |
+| Bordes (0,1)        | `f(0)=0, f(10)=1 ⇒ cf(0)=1, cf(10)=0` | `true `               |
+| Propiedad de suma   | `g(x) + cg(x) = 1  `                  | `true `               |
 
 ---
 
@@ -530,6 +555,22 @@ graph TD
 * Si en algún punto `cd1(i) > cd2(i)`, la función retorna `false`.
 * Si termina todas las comparaciones sin fallar, retorna `true`.
 
+## -Ejemplo Propio
+```Scala
+ConjuntosDifusos.inclusion(f,g)
+```
+Verifica si todos los elementos de `f` tienen grado de pertenencia menor o igual al de `g`
+
+| Caso                               | Entrada           | Resultado esperado  |
+|:-----------------------------------|:------------------|:--------------------|
+| Vacío ⊆ Universal                  | `f(x)=0, g(x)=1`  | `true `               |
+| Universal ⊄ Vacío                  | `f(x)=1, g(x)=0 ` | `false `              |
+| grande(1,1) ⊆ Universal            | `g(x)=1   `         | `true`                |
+| grande(1,1) ⊄ Constante 0.1        | `g(x)=0.1 `       | `false `              |
+| Diferencia puntual rompe inclusión | `diffAt1000 `     | `false  `             |
+
+
+
 ---
 
 
@@ -544,7 +585,19 @@ Comprueba si dos conjuntos son iguales (`cd1(x) == cd2(x)` para todo `x`).
 | 4 | [1.0, 0.9, 0.8] | [1.0, 0.9, 0.7] |       `false    `    | Último difiere              |
 | 5 | [0.5, 0.5, 0.5] | [0.5, 0.5, 0.5] |        `true `       | Igualdad perfecta           |
 
+## - Ejemplo propio
+```Scala
+ConjuntosDifusos.igualdad(f,g)
+```
+Aplica la operación de unión difusa `max(f(x), g(x))` para cada elemento
 
+| Caso                    | Entrada                                  | Resultado esperado  |
+|:------------------------|:-----------------------------------------|:--------------------|
+| Vacío == Vacío          | `f(x)=0, g(x)=0 `                        | `true`                |
+| Universal == Universal  | `f(x)=1, g(x)=1`                         | `true `               |
+| Pares == Copia de Pares | igualdad exacta                          | `true `               |
+| Diferencia en un punto  | `f(999)=0.6, g(999)=0.5`                 | `false`               |
+| Doble complemento       | `igualdad(f, complemento(complemento(f)))` | `true`                |
 ---
 
 
@@ -559,6 +612,20 @@ Devuelve el máximo entre los valores de pertenencia de dos conjuntos.
 | 4 | 0.8      | 0.2       | 4 |       0.8       | Predomina `cd1`     |
 | 5 | 0.9      | 0.9       | 5 |       0.9       | Coinciden valores |
 
+## - Ejemplo propio 
+```Scala
+ConjuntosDifusos.union(cd1,cd2)
+```
+Aplica la operación de unión difusa `max(f(x), g(x))` para cada elemento.
+
+| Caso                         | Entrada                    | Resultado esperado  |
+|:-----------------------------|:---------------------------|:--------------------|
+| Unión simple                 | `A(1)=0.7, B(1)=0.5 → 0.7` | true - Pasa test    |
+| Propiedad conmutativa        | `union(A,B)=union(B,A) `   | true - Pasa test    |
+| No menor que ningún operando | `u(x) ≥ A(x), u(x) ≥ B(x)` | true - Pasa test    |
+| Valores fuera del dominio    | ` x=100 → 0`               | true - Pasa test    |
+| Rango de salida              | `0 ≤ u(x) ≤ 1 `            | true - Pasa test    |
+
 ---
 
 ## - Función Interseccion `interseccion(cd1, cd2)`
@@ -571,6 +638,21 @@ Devuelve el mínimo entre los valores de pertenencia de dos conjuntos.
 | 3 | 0.0      | 0.4      | 3 |       0.0       | Uno nulo        |
 | 4 | 0.8      | 0.2      | 4 |       0.2       | Predomina menor |
 | 5 | 0.9      | 1.0      | 5 |       0.9       | Mínimo de ambos |
+
+## - Ejemplo propio
+```Scala
+ConjuntosDifusos.interseccion(cd1,cd2)
+```
+Aplica la operación de intersección difusa `min(f(x), g(x))` para cada elemento.
+
+| Caso                         | Entrada                             | Resultado esperado |
+|:-----------------------------|:------------------------------------|--------------------|
+| Intersección simple          | `A(1)=0.7, B(1)=0.5 → 0.5 `           |true - Pasa test    |
+| Propiedad conmutativa        | `interseccion(A,B)=interseccion(B,A)` |true - Pasa test    |
+| No mayor que ningún operando | `i(x) ≤ A(x), i(x) ≤ B(x)`            |true - Pasa test    |
+| Valores fuera del dominio    | `x=100 → 0 `                          |true - Pasa test    |
+| Rango de salida              | `0 ≤ i(x) ≤ 1`                        |true - Pasa test    |
+
 
 ---
 
